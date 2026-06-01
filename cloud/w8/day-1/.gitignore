@@ -1,0 +1,9 @@
+# Terraform state — chứa sensitive data, không commit
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Secrets
+*.tfvars.secret
+override.tf
