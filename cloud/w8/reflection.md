@@ -22,3 +22,10 @@
 
 ## Day 3 — Terraform Advanced + Live Session
 
+- Terraform State Management: local vs remote (S3 + DynamoDB lock)
+- Modules: tái sử dụng code, local module vs registry module
+- Best practices: naming, pin version, tag mọi resource, không commit tfstate
+- ADR-001: quyết định dùng S3+DynamoDB làm remote backend
+- Lab: bootstrap S3 bucket + DynamoDB cho state, backend.tf config
+- 15h–17h: Live session với mentor Minh
+- 17h–18h: Online Test 1 (scope Terraform D1+D3)
