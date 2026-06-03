@@ -244,10 +244,3 @@ terraform output       # xem output values
 
 ---
 
-## Câu hỏi tự kiểm tra
-
-1. Sự khác nhau giữa `declarative` và `imperative` IaC là gì?
-2. `terraform plan` có tạo resource thực tế không?
-3. Tại sao không nên commit `terraform.tfstate`?
-4. `data source` khác `resource` ở điểm nào?
-5. Khi nào cần chạy lại `terraform init`?

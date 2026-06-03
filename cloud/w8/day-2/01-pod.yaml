@@ -1,0 +1,44 @@
+# Demo: Pod cơ bản
+# Chạy: kubectl apply -f 01-pod.yaml
+# Xóa:  kubectl delete -f 01-pod.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-pod
+  labels:
+    app: web
+    env: dev
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.25-alpine
+      ports:
+        - containerPort: 80
+
+      # Resource limits — luôn set để tránh 1 Pod ăn hết tài nguyên Node
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "100m"
+        limits:
+          memory: "128Mi"
+          cpu: "200m"
+
+      # Liveness probe — restart nếu nginx không respond
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 5   # chờ 5s sau khi container start
+        periodSeconds: 10        # check mỗi 10s
+        failureThreshold: 3      # fail 3 lần liên tiếp → restart
+
+      # Readiness probe — remove khỏi Service nếu không ready
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 3
+        periodSeconds: 5
+        failureThreshold: 2

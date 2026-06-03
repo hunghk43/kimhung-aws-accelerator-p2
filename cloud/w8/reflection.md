@@ -11,6 +11,14 @@
 
 ## Day 2 — Kubernetes Fundamentals
 
+- Container vs VM, tại sao cần Orchestration
+- K8s architecture: Control Plane (API Server, etcd, Scheduler) + Node (kubelet)
+- Pod, Deployment, Service (ClusterIP/NodePort)
+- Liveness probe vs Readiness probe
+- ConfigMap (config) + Secret (sensitive data), inject env/volume
+- NetworkPolicy: default-deny + whitelist pattern
+- Cài Docker Desktop + minikube + kubectl, verify `minikube start`
+
 
 ## Day 3 — Terraform Advanced + Live Session
 

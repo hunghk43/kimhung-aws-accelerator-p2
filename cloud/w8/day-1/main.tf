@@ -1,5 +1,5 @@
 # W8 Day 1 — Terraform Demo
-# Demo tạo S3 bucket đơn giản (không cần EC2, tránh tốn tiền)
+# Demo tạo S3 bucket đơn giản 
 
 terraform {
   required_providers {
@@ -33,7 +33,7 @@ resource "aws_s3_bucket_public_access_block" "portfolio" {
   restrict_public_buckets = true
 }
 
-# Random suffix để tránh trùng tên bucket (globally unique)
+# Random suffix để tránh trùng tên bucket 
 resource "random_id" "suffix" {
   byte_length = 4
 }
