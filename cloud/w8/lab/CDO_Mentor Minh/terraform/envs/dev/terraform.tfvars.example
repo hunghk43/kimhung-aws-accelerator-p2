@@ -1,0 +1,34 @@
+# Copy file này thành terraform.tfvars và điền giá trị thực
+# cp terraform.tfvars.example terraform.tfvars
+
+aws_region   = "ap-southeast-1"
+project_name = "mentor-web-demo"
+
+# Networking
+vpc_cidr             = "10.20.0.0/16"
+public_subnet_cidrs  = ["10.20.1.0/24", "10.20.2.0/24"]
+private_subnet_cidrs = ["10.20.11.0/24", "10.20.12.0/24"]
+
+# EC2
+admin_cidr    = "YOUR_IP/32"   # thay bằng IP của bạn, vd: "1.2.3.4/32"
+key_name      = "your-key-pair" # tên EC2 key pair, hoặc xóa dòng này nếu dùng SSM
+instance_type = "t3.micro"
+app_port      = 8000
+
+# RDS MySQL
+mysql_db_name             = "mentor_web"
+mysql_master_username     = "admin"
+mysql_master_password     = "CHANGE_ME_strong_password_123!" # bắt buộc thay
+mysql_engine_version      = "8.0.36"
+mysql_instance_class      = "db.t3.micro"
+mysql_allocated_storage   = 20
+
+# S3
+s3_assets_bucket_name = "mentor-web-demo-assets-YOUR_ACCOUNT_ID" # phải globally unique
+
+# App source (optional): URL đến file zip chứa source code trên S3 hoặc HTTP
+# source_bundle_url = "https://your-bucket.s3.amazonaws.com/app.zip"
+
+tags = {
+  Owner = "your-name"
+}

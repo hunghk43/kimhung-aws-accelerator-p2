@@ -1,0 +1,64 @@
+#!/bin/bash
+exec > >(tee /var/log/user-data.log) 2>&1
+set -euo pipefail
+
+echo "[INFO] Starting user_data setup..."
+
+dnf update -y --allowerasing
+dnf install -y unzip
+
+curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+dnf install -y nodejs
+
+echo "[INFO] Node version: $(node --version)"
+
+mkdir -p /opt/mentor-web-demo
+chown -R ec2-user:ec2-user /opt/mentor-web-demo
+
+cd /opt/mentor-web-demo
+
+%{ if source_bundle_url != "" ~}
+echo "[INFO] Downloading app bundle from ${source_bundle_url}..."
+aws s3 cp "${source_bundle_url}" app.zip
+echo "[INFO] Extracting..."
+unzip -o app.zip
+rm -f app.zip
+echo "[INFO] Running npm install..."
+npm install --omit=dev
+chown -R ec2-user:ec2-user /opt/mentor-web-demo
+echo "[INFO] App bundle ready."
+%{ endif ~}
+
+echo "[INFO] Creating systemd service..."
+
+cat >/etc/systemd/system/${service_name}.service <<EOF
+[Unit]
+Description=${app_name}
+After=network.target
+
+[Service]
+Type=simple
+User=ec2-user
+WorkingDirectory=/opt/mentor-web-demo
+Environment=PORT=${app_port}
+Environment=APP_NAME=${app_name}
+Environment=MYSQL_HOST=${mysql_host}
+Environment=MYSQL_PORT=${mysql_port}
+Environment=MYSQL_DATABASE=${mysql_database}
+Environment=MYSQL_USER=${mysql_user}
+Environment=MYSQL_PASSWORD=${mysql_password}
+Environment=S3_BUCKET_NAME=${s3_bucket_name}
+ExecStart=/usr/bin/node /opt/mentor-web-demo/server.js
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable ${service_name}
+systemctl start ${service_name}
+
+echo "[INFO] Setup complete. Service status:"
+systemctl status ${service_name} --no-pager

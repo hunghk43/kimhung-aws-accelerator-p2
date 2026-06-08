@@ -1,0 +1,16 @@
+{
+  "name": "mentor-web-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal AWS final project web app for EC2 + RDS + S3",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "mysql2": "^3.11.0"
+  }
+}

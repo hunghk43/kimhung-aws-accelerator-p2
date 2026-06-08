@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mentor Web Demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero card">
+        <div class="eyebrow">AWS Final Project Starter</div>
+        <h1 id="appName">Mentor Web Demo</h1>
+        <p class="lede">
+          Một web tối giản bằng HTML, CSS, JS và Node.js để làm nền cho bài tập
+          Terraform: chạy trên EC2, lưu dữ liệu vào RDS MySQL, và để sẵn chỗ cho
+          S3 static assets.
+        </p>
+        <div class="status-grid">
+          <div class="status-pill" id="dbStatus">DB: checking...</div>
+          <div class="status-pill" id="bucketStatus">
+            S3 bucket: checking...
+          </div>
+          <div class="status-pill">Route health: /api/health</div>
+        </div>
+      </section>
+
+      <section class="card split-layout">
+        <div>
+          <h2>Thêm ghi chú</h2>
+          <p>Một form nhỏ là đủ để chứng minh web + backend + DB hoạt động.</p>
+          <form class="note-form" id="noteForm">
+            <input
+              id="noteInput"
+              type="text"
+              name="content"
+              maxlength="255"
+              placeholder="Nhập một ghi chú ngắn..."
+              required
+            />
+            <button type="submit">Lưu</button>
+          </form>
+        </div>
+
+        <div>
+          <h2>Danh sách ghi chú</h2>
+          <div class="notes-list" id="notesList"></div>
+        </div>
+      </section>
+    </main>
+
+    <template id="emptyStateTemplate">
+      <p class="empty-state">Chưa có dữ liệu. Hãy thêm ghi chú đầu tiên.</p>
+    </template>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
