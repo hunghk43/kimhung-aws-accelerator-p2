@@ -1,0 +1,26 @@
+# kube-prometheus-stack helm values
+# helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring -f values.yaml
+
+grafana:
+  enabled: true
+  adminPassword: "accelerator123"   # đổi password thực tế
+  persistence:
+    enabled: false   # tắt persistence cho lab local
+
+prometheus:
+  prometheusSpec:
+    retention: 7d
+    # Tự động pickup PrometheusRule trong tất cả namespace
+    ruleNamespaceSelector: {}
+    ruleSelector: {}
+
+alertmanager:
+  enabled: true
+
+# Tắt những thứ không cần cho lab
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false

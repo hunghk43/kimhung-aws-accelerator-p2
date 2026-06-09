@@ -1,0 +1,80 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: slo-burn-rate-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring   # match kube-prometheus-stack
+spec:
+  groups:
+    - name: slo.availability
+      interval: 30s
+      rules:
+        # SLO: 99.9% availability
+        # Error budget: 0.1% = 43.8 phút/tháng
+
+        # Fast burn: burn rate > 14.4x → hết budget trong 2h
+        - alert: HighErrorBudgetBurnRate
+          expr: |
+            (
+              sum(rate(http_requests_total{status=~"5.."}[1h]))
+              /
+              sum(rate(http_requests_total[1h]))
+            ) > (14.4 * 0.001)
+            and
+            (
+              sum(rate(http_requests_total{status=~"5.."}[5m]))
+              /
+              sum(rate(http_requests_total[5m]))
+            ) > (14.4 * 0.001)
+          for: 2m
+          labels:
+            severity: critical
+            slo: availability
+          annotations:
+            summary: "Critical: Error budget burning fast"
+            description: >
+              Burn rate > 14.4x. Error budget exhausted in < 2 hours.
+              Current error rate: {{ $value | humanizePercentage }}
+
+        # Slow burn: burn rate > 6x → hết budget trong 5 ngày
+        - alert: MediumErrorBudgetBurnRate
+          expr: |
+            (
+              sum(rate(http_requests_total{status=~"5.."}[6h]))
+              /
+              sum(rate(http_requests_total[6h]))
+            ) > (6 * 0.001)
+            and
+            (
+              sum(rate(http_requests_total{status=~"5.."}[30m]))
+              /
+              sum(rate(http_requests_total[30m]))
+            ) > (6 * 0.001)
+          for: 15m
+          labels:
+            severity: warning
+            slo: availability
+          annotations:
+            summary: "Warning: Error budget burning at medium rate"
+            description: >
+              Burn rate > 6x over 6h window.
+              Current error rate: {{ $value | humanizePercentage }}
+
+    - name: slo.latency
+      rules:
+        # Latency SLO: 95% requests < 200ms
+        - alert: LatencySLOBreach
+          expr: |
+            (
+              sum(rate(http_request_duration_seconds_bucket{le="0.2"}[5m]))
+              /
+              sum(rate(http_request_duration_seconds_count[5m]))
+            ) < 0.95
+          for: 5m
+          labels:
+            severity: warning
+            slo: latency
+          annotations:
+            summary: "Latency SLO breach"
+            description: "Less than 95% of requests completed within 200ms"

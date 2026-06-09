@@ -10,7 +10,15 @@
 
 
 
-## Day 2
+## Day 2 — Observability: SLO/SLI/OTel
+
+- SLI/SLO/SLA/Error Budget — tính error budget từ SLO 99.9%
+- 3 pillars: Metrics + Logs + Traces
+- OTel Collector: nhận OTLP → route sang Prometheus/Loki/Jaeger
+- Prometheus + Grafana + Loki stack trên minikube
+- Multi-window burn rate alert: fast (1h×5min) + slow (6h×30min)
+- PromQL queries cho availability và latency SLI
+
 
 
 ## Day 3
