@@ -21,5 +21,14 @@
 
 
 
-## Day 3
+## Day 3 — Progressive Delivery: Canary + Argo Rollouts
+
+- Canary vs RollingUpdate vs Blue/Green so sánh
+- Argo Rollouts: Rollout CRD thay thế Deployment
+- AnalysisTemplate: Prometheus query làm abort criteria
+- Tích hợp burn rate (14.4x) vào AnalysisTemplate
+- Steps: 10% → 30% → 50% → auto promote, abort khi metric fail
+- 15h–17h: Live Monitoring/Observability với mentor Minh
+- 17h–18h: Online Test 1 (scope D1 GitOps + D2 Observability)
+
 

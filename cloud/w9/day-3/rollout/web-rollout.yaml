@@ -1,0 +1,68 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: web-rollout
+  namespace: default
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.25-alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+
+  strategy:
+    canary:
+      stableService: web-stable-svc
+      canaryService: web-canary-svc
+
+      steps:
+        # Step 1: 10% traffic sang canary, đợi 2 phút
+        - setWeight: 10
+        - pause: {duration: 2m}
+        - analysis:
+            templates:
+              - templateName: success-rate-analysis
+              - templateName: burn-rate-analysis
+            args:
+              - name: service-name
+                value: web-canary-svc
+
+        # Step 2: tăng lên 30%
+        - setWeight: 30
+        - pause: {duration: 2m}
+        - analysis:
+            templates:
+              - templateName: success-rate-analysis
+              - templateName: burn-rate-analysis
+            args:
+              - name: service-name
+                value: web-canary-svc
+
+        # Step 3: tăng lên 50%
+        - setWeight: 50
+        - pause: {duration: 5m}
+        - analysis:
+            templates:
+              - templateName: success-rate-analysis
+              - templateName: burn-rate-analysis
+            args:
+              - name: service-name
+                value: web-canary-svc
+
+        # Nếu tất cả pass → auto promote 100%
