@@ -1,0 +1,17 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: deployment-require-app-label
+spec:
+  # dryrun trước để audit, sau đó đổi thành deny
+  enforcementAction: deny
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment"]
+    # Chỉ áp dụng cho namespace demo
+    namespaces: ["demo"]
+  parameters:
+    labels:
+      - app       # bắt buộc có label app
+      - version   # bắt buộc có label version (để canary phân biệt)

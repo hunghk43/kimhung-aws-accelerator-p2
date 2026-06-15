@@ -1,0 +1,58 @@
+# Gán role developer cho user "dev-hung" trong namespace demo
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-hung-developer
+  namespace: demo
+subjects:
+  - kind: User
+    name: dev-hung
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: developer
+  apiGroup: rbac.authorization.k8s.io
+---
+# Gán role sre cho group "sre-team" trong namespace demo
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sre-team-binding
+  namespace: demo
+subjects:
+  - kind: Group
+    name: sre-team
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: sre
+  apiGroup: rbac.authorization.k8s.io
+---
+# Gán ClusterRole sre-cluster-reader cho sre-team — cross namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: sre-cluster-reader-binding
+subjects:
+  - kind: Group
+    name: sre-team
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: sre-cluster-reader
+  apiGroup: rbac.authorization.k8s.io
+---
+# Gán viewer cho ServiceAccount ci-bot (CI pipeline chỉ được đọc)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ci-bot-viewer
+  namespace: demo
+subjects:
+  - kind: ServiceAccount
+    name: ci-bot
+    namespace: demo
+roleRef:
+  kind: Role
+  name: viewer
+  apiGroup: rbac.authorization.k8s.io

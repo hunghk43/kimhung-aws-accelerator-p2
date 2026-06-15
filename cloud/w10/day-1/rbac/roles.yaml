@@ -1,0 +1,48 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer
+  namespace: demo
+rules:
+  # Deploy workloads — không có delete
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+  # Xem pods và logs
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list", "watch"]
+  # Quản lý ConfigMap và Service
+  - apiGroups: [""]
+    resources: ["configmaps", "services"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sre
+  namespace: demo
+rules:
+  # Đọc tất cả resource trong namespace
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  # Restart pod (xóa pod để recreate)
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch", "delete"]
+  # Scale deployment
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets", "statefulsets"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: viewer
+  namespace: demo
+rules:
+  # Chỉ đọc — không tạo, không sửa, không xóa
+  - apiGroups: ["", "apps", "argoproj.io"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]

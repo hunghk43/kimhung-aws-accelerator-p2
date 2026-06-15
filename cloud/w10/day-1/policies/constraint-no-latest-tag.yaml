@@ -1,0 +1,13 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sNoLatestTag
+metadata:
+  name: no-latest-image-tag
+spec:
+  enforcementAction: deny
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+      - apiGroups: ["argoproj.io"]
+        kinds: ["Rollout"]   # áp dụng cả cho Argo Rollouts
+    namespaces: ["demo"]

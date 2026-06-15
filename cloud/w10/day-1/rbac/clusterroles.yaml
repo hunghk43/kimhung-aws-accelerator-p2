@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sre-cluster-reader
+rules:
+  # SRE cần đọc cross-namespace: nodes, namespaces, PV
+  - apiGroups: [""]
+    resources: ["nodes", "namespaces", "persistentvolumes"]
+    verbs: ["get", "list", "watch"]
+  # Đọc metrics
+  - apiGroups: ["metrics.k8s.io"]
+    resources: ["nodes", "pods"]
+    verbs: ["get", "list"]
+  # Đọc events cluster-wide để debug
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch"]
