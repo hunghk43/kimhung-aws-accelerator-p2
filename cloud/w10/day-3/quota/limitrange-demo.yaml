@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: demo-limits
+  namespace: demo
+spec:
+  limits:
+    - type: Container
+      # Default nếu container không khai báo
+      default:
+        cpu: "500m"
+        memory: 256Mi
+      defaultRequest:
+        cpu: "100m"
+        memory: 128Mi
+      # Giới hạn cứng
+      max:
+        cpu: "2"
+        memory: 1Gi
+      min:
+        cpu: "50m"
+        memory: 64Mi
+    - type: Pod
+      max:
+        cpu: "4"
+        memory: 2Gi
